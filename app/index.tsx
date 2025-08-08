@@ -1,14 +1,50 @@
-import { offers } from "@/constants";
-import { FlatList } from "react-native";
+import { images, offers } from "@/constants";
+import cn from 'clsx';
+import { Fragment } from "react";
+import { FlatList, Image, Pressable, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import "./global.css";
  
 export default function Index() {
+  const isEven = (index: number) => index % 2 === 0;
+
   return (
-    <SafeAreaView>
+    <SafeAreaView className="flex-1 bg-white">
+      <View className="flex-between flex-row w-full my-5 px-5">
+        <View className="flex-start ">
+          <Text className="text-primary small-bold">Deliver To:</Text>
+          <TouchableOpacity className="flex-center flex-row gap-x-1 mt-0.5">
+            <Text className="paragraph-bold text-dark-100">Egypt</Text>
+            <Image source={images.arrowDown} className="size-3" resizeMode="contain"/>
+          </TouchableOpacity>
+        </View>
+      </View>
       <FlatList
         data={offers}
-        renderItem={({ item }) => (<div />)}
+        renderItem={({ item, index }) => {
+          return (
+            <View>
+              <Pressable className={cn("offer-card", isEven(index) ? "flex-row-reverse" : "flex-row")} style={{ backgroundColor: item.color }} android_ripple={{color: "#ffff22"}}>
+                {
+                  ({pressed}) => {
+                    return (
+                      <Fragment>
+                        <View className={"h-full w-1/2"}>
+                          <Image source={item.image} className={"size-full"} resizeMode={"contain"}/>
+                        </View>
+                        <View className={cn("offer-card__info", isEven(index) ? "pl-10" : "pr-10")}>
+                          <Text className={"text-white h1-bold leading-tight"}>{item.title}</Text>
+                          <Image source={images.arrowRight} tintColor={"#ffffff"} className="size-10" resizeMode="contain"/>
+                        </View>
+                      </Fragment>
+                    )
+                  }
+                }
+              </Pressable>
+            </View>
+          )
+        }}
+        contentContainerClassName={"pb-28 px-5"}
       />
     </SafeAreaView>
   );

@@ -1,5 +1,6 @@
 import CustomButtom from '@/components/CustomButtom'
 import CustomInput from '@/components/CustomInput'
+import { createUser } from '@/lib/appwrite'
 import { Link, router } from 'expo-router'
 import { useState } from 'react'
 import { Alert, Text, View } from 'react-native'
@@ -9,13 +10,20 @@ const signin = () => {
   const [form, setForm] = useState({name: '', email: '', password: ''});
 
   const submit = async () => {
+    const { name, email, password } = form;
+
     setIsSubmitting(true);
 
-    if (!form.name || !form.email || !form.password) return Alert.alert('Error', 'Please enter valid name, email and password');
+    if (!name || !email || !password) return Alert.alert('Error', 'Please enter valid name, email and password');
 
     try
     {
-      Alert.alert('success', 'User signed up successfully');
+      await createUser({
+        email,
+        name,
+        password
+      });
+      
       router.replace('/');
     }
     catch (error: any)

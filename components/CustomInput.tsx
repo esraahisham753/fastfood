@@ -1,4 +1,5 @@
 import { CustomInputProps } from '@/type';
+import cn from 'clsx';
 import React, { useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
 
@@ -18,6 +19,14 @@ const CustomInput = ({
       <TextInput
         placeholder={placeholder}
         placeholderTextColor="#888" 
+        onChangeText={onChangeText}
+        secureTextEntry={secureTextEntry}
+        keyboardType={keyboardType}
+        onFocus={() => setIsFocus(true)}
+        onBlur={() => setIsFocus(false)}
+        autoCapitalize='none'
+        autoCorrect={false}
+        className={cn('input', isFocus ? 'border-primary' : 'border-gray-300')}
       />
     </View>
   )

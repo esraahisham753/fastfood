@@ -1,5 +1,5 @@
 import { CreateUserParams, SignInParams } from "@/type";
-import { Account, Avatars, Client, Databases, ID } from "react-native-appwrite";
+import { Account, Avatars, Client, Databases, ID, Query } from "react-native-appwrite";
 
 const appwriteConfig = {
     endpoint: process.env.EXPO_PUBLIC_APPWRITE_ENDPOINT!,
@@ -62,7 +62,28 @@ export const signIn = async ({email, password}:SignInParams) => {
 }
 
 export const getCurrentUser = async () => {
-    const currentAccount = await account.get();
+    try
+    {
+        const currentAccount = await account.get();
 
+        if (!currentAccount) throw new Error('Cannot find an account');
+
+        const documents = await databases.listDocuments(
+            appwriteConfig.databaseID,
+            appwriteConfig.userCollectionID,
+            [
+                Query.equal("accountID", currentAccount.$id)
+            ]
+        );
+
+        if (!documents) throw new Error(`Cannot find user with this id: ${currentAccount.$id}`);
+
+        return documents.documents[0];
+    }
+    catch (e)
+    {
+        console.log(e as string);
+        throw new Error(e as string);
+    }
 
 }

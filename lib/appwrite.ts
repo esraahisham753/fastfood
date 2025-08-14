@@ -6,7 +6,8 @@ const appwriteConfig = {
     platform: "com.esraacodes.es-fastfood",
     projectID: process.env.EXPO_PUBLIC_APPWRITE_PROJECT_ID!,
     databaseID: "689a14880017238eec9b",
-    userCollectionID: "689a149e002fb76a0545"
+    userCollectionID: "689a149e002fb76a0545",
+    categoryCollectionID: "689e083a0000e8a0c5a0"
 };
 
 export const client = new Client();

@@ -58,23 +58,45 @@ async function clearStorage(): Promise<void> {
 }
 
 async function uploadImageToStorage(imageUrl: string) {
-    const response = await fetch(imageUrl);
-    const blob = await response.blob();
+    try {
+        console.log('Downloading image from:', imageUrl);
+        const response = await fetch(imageUrl);
 
-    const fileObj = {
-        name: imageUrl.split("/").pop() || `file-${Date.now()}.jpg`,
-        type: blob.type,
-        size: blob.size,
-        uri: imageUrl,
-    };
+        if (!response.ok) {
+            throw new Error(`Failed to fetch image: ${response.status}`);
+        }
 
-    const file = await storage.createFile(
-        appwriteConfig.bucketID,
-        ID.unique(),
-        fileObj
-    );
+        const blob = await response.blob();
 
-    return storage.getFileViewURL(appwriteConfig.bucketID, file.$id);
+        // Create a proper file object for React Native
+        const fileName = imageUrl.split("/").pop()?.split('?')[0] || `file-${Date.now()}.png`;
+
+        // For React Native, we need to create a File-like object
+        const file = {
+            name: fileName,
+            type: blob.type || 'image/png',
+            size: blob.size,
+            // Convert blob to base64 or use URI depending on your setup
+            uri: imageUrl, // This might need adjustment based on your environment
+        } as any;
+
+        console.log('Uploading file:', fileName);
+
+        const uploadedFile = await storage.createFile(
+            appwriteConfig.bucketID,
+            ID.unique(),
+            file
+        );
+
+        const fileUrl = storage.getFileViewURL(appwriteConfig.bucketID, uploadedFile.$id);
+        console.log('File uploaded successfully:', fileUrl);
+
+        return fileUrl;
+    } catch (error) {
+        console.error('Error uploading image:', error);
+        // Return a fallback URL or re-throw the error
+        throw error;
+    }
 }
 
 async function seed(): Promise<void> {
@@ -130,7 +152,7 @@ async function seed(): Promise<void> {
                 rating: item.rating,
                 calories: item.calories,
                 protein: item.protein,
-                categories: categoryMap[item.category_name],
+                category: categoryMap[item.category_name],
             }
         );
 
@@ -144,7 +166,7 @@ async function seed(): Promise<void> {
                 ID.unique(),
                 {
                     menu: doc.$id,
-                    customizations: customizationMap[cusName],
+                    customization: customizationMap[cusName],
                 }
             );
         }

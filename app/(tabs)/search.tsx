@@ -41,6 +41,9 @@ const search = () => {
             )
       }}
           keyExtractor={(item) => item.$id}
+          numColumns={2}
+          columnWrapperClassName={"gap-7"}
+          contentContainerClassName={"gap-7 px-5"}
       />
     </SafeAreaView>
   )

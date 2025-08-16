@@ -1,10 +1,13 @@
 import {Text, View, Button, FlatList} from 'react-native'
 import {SafeAreaView} from "react-native-safe-area-context";
-import seed from "@/lib/seed";
+import cn from "clsx";
 import useAppwrite from "@/lib/useAppwrite";
 import {getCategories, getSearchMenus} from "@/lib/appwrite";
 import {useLocalSearchParams} from "expo-router";
 import {useEffect} from "react";
+import Cart from "@/components/Cart";
+import MenuCard from "@/components/MenuCard";
+import {MenuItem} from "@/type";
 
 const search = () => {
     const { category, query } = useLocalSearchParams<{query: string; category: string}>();
@@ -34,9 +37,10 @@ const search = () => {
       <FlatList
           data={menus}
           renderItem={({item, index}) => {
+              const rightColumn = index % 2 == 1;
             return (
-                <View className="flex-1 max-w-[48%]">
-                    <Text>Menu Card</Text>
+                <View className={cn("flex-1 max-w-[48%]", rightColumn ? 'mt-10' : 'mt-0')}>
+                    <MenuCard item={item as unknown as MenuItem} />
                 </View>
             )
       }}
@@ -44,6 +48,26 @@ const search = () => {
           numColumns={2}
           columnWrapperClassName={"gap-7"}
           contentContainerClassName={"gap-7 px-5"}
+          ListHeaderComponent={() => {
+              return (
+                  <View className="my-8">
+                      <View className="flex-row flex-between">
+                          <View className="flex-col gap-1.5">
+                              <Text className="small-bold text-primary uppercase">Search</Text>
+                              <Text className="paragraph-semibold text-dark-100">Find your favorite food</Text>
+                          </View>
+                          <Cart />
+                      </View>
+
+                  </View>
+              )
+          }}
+          ListEmptyComponent={() => {
+              return (
+                  !menusLoading ? <Text>No items to return</Text> : <Text>Loading...</Text>
+              )
+          }}
+
       />
     </SafeAreaView>
   )

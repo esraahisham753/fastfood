@@ -104,7 +104,7 @@ export const getSearchMenus = async ({category, query}:GetMenuParams) => {
     try {
         const menus = await databases.listDocuments(
             appwriteConfig.databaseID,
-            appwriteConfig.userCollectionID,
+            appwriteConfig.menuCollectionID,
             queries
         );
 
@@ -120,7 +120,7 @@ export const getCategories = async () => {
     try {
         const cats = await databases.listDocuments(
             appwriteConfig.databaseID,
-            appwriteConfig.userCollectionID,
+            appwriteConfig.categoryCollectionID,
         );
 
         return cats.documents;

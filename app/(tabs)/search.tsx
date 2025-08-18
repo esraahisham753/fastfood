@@ -8,6 +8,9 @@ import {useEffect} from "react";
 import Cart from "@/components/Cart";
 import MenuCard from "@/components/MenuCard";
 import {MenuItem} from "@/type";
+import seed from "@/lib/seed";
+import Searchbar from "@/components/Searchbar";
+import Filter from "@/components/Filter";
 
 const search = () => {
     const { category, query } = useLocalSearchParams<{query: string; category: string}>();
@@ -33,7 +36,7 @@ const search = () => {
     }, [query, category]);
 
   return (
-    <SafeAreaView className="bg-white h-full">
+    <SafeAreaView className="bg-[#FAFAFA] h-full">
       <FlatList
           data={menus}
           renderItem={({item, index}) => {
@@ -47,7 +50,7 @@ const search = () => {
           keyExtractor={(item) => item.$id}
           numColumns={2}
           columnWrapperClassName={"gap-7"}
-          contentContainerClassName={"gap-7 px-5"}
+          contentContainerClassName={"gap-7 px-5 pb-32"}
           ListHeaderComponent={() => {
               return (
                   <View className="my-8">
@@ -58,7 +61,8 @@ const search = () => {
                           </View>
                           <Cart />
                       </View>
-
+                      <Searchbar />
+                      <Filter categories={categories!}/>
                   </View>
               )
           }}

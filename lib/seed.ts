@@ -1,4 +1,4 @@
-import { ID } from "react-native-appwrite";
+import {ID, Permission, Role} from "react-native-appwrite";
 import { appwriteConfig, databases, storage } from "./appwrite";
 import dummyData from "./data";
 
@@ -67,25 +67,25 @@ async function uploadImageToStorage(imageUrl: string) {
         }
 
         const blob = await response.blob();
-
-        // Create a proper file object for React Native
         const fileName = imageUrl.split("/").pop()?.split('?')[0] || `file-${Date.now()}.png`;
 
-        // For React Native, we need to create a File-like object
         const file = {
             name: fileName,
             type: blob.type || 'image/png',
             size: blob.size,
-            // Convert blob to base64 or use URI depending on your setup
-            uri: imageUrl, // This might need adjustment based on your environment
+            uri: imageUrl,
         } as any;
 
         console.log('Uploading file:', fileName);
 
+        // Create file with public read permissions
         const uploadedFile = await storage.createFile(
             appwriteConfig.bucketID,
             ID.unique(),
-            file
+            file,
+            [
+                Permission.read(Role.any()), // Allow anyone to read the file
+            ]
         );
 
         const fileUrl = storage.getFileViewURL(appwriteConfig.bucketID, uploadedFile.$id);
@@ -94,7 +94,6 @@ async function uploadImageToStorage(imageUrl: string) {
         return fileUrl;
     } catch (error) {
         console.error('Error uploading image:', error);
-        // Return a fallback URL or re-throw the error
         throw error;
     }
 }

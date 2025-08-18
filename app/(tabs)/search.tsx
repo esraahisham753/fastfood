@@ -7,7 +7,7 @@ import {useLocalSearchParams} from "expo-router";
 import {useEffect} from "react";
 import Cart from "@/components/Cart";
 import MenuCard from "@/components/MenuCard";
-import {MenuItem} from "@/type";
+import {Category, MenuItem} from "@/type";
 import seed from "@/lib/seed";
 import Searchbar from "@/components/Searchbar";
 import Filter from "@/components/Filter";
@@ -25,8 +25,7 @@ const search = () => {
     });
 
     const { data: categories } = useAppwrite({
-        fn: getCategories,
-        params: {}
+        fn: getCategories
     });
 
     useEffect(() => {
@@ -52,6 +51,8 @@ const search = () => {
           columnWrapperClassName={"gap-7"}
           contentContainerClassName={"gap-7 px-5 pb-32"}
           ListHeaderComponent={() => {
+              // @ts-ignore
+              // @ts-ignore
               return (
                   <View className="my-8">
                       <View className="flex-row flex-between">
@@ -62,7 +63,7 @@ const search = () => {
                           <Cart />
                       </View>
                       <Searchbar />
-                      <Filter categories={categories!}/>
+                      <Filter categories={(categories as unknown as Category[]) || []}/>
                   </View>
               )
           }}

@@ -1,4 +1,4 @@
-import {CreateUserParams, GetMenuParams, SignInParams} from "@/type";
+import {Category, CreateUserParams, GetMenuParams, SignInParams} from "@/type";
 import { Account, Avatars, Client, Databases, ID, Query, Storage } from "react-native-appwrite";
 
 export const appwriteConfig = {
@@ -116,7 +116,7 @@ export const getSearchMenus = async ({category, query}:GetMenuParams) => {
     }
 }
 
-export const getCategories = async () => {
+export const getCategories = async ()  => {
     try {
         const cats = await databases.listDocuments(
             appwriteConfig.databaseID,

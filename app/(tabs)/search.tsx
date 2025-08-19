@@ -55,7 +55,7 @@ const search = () => {
               // @ts-ignore
               return (
                   <View className="my-8">
-                      <View className="flex-row flex-between">
+                      <View className="flex-row flex-between mb-4">
                           <View className="flex-col gap-1.5">
                               <Text className="small-bold text-primary uppercase">Search</Text>
                               <Text className="paragraph-semibold text-dark-100">Find your favorite food</Text>

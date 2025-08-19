@@ -6,7 +6,7 @@ import cn from 'clsx';
 
 const Filter = ({ categories }: {categories: Category[]}) => {
     const { category } = useLocalSearchParams();
-    const [active, setActive] = useState( category || '');
+    const [active, setActive] = useState( category || 'all');
     const filterData: (Category | {$id: string; name: string})[] = categories ?
         [{$id: 'all', name:'All'}, ...categories] :
         [{$id: 'all', name:'All'}];

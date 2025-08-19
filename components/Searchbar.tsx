@@ -9,8 +9,12 @@ const Searchbar = () => {
 
     const handleChange = (value: string) => {
         setQuery(value);
-        router.setParams({query: value});
+        if (!value) router.setParams({query: undefined});
     };
+
+    const handleSubmit = () => {
+        if (query) router.setParams({query})
+    }
 
     return (
         <View className="searchbar">
@@ -20,12 +24,15 @@ const Searchbar = () => {
                 placeholderTextColor="#A5A5A5"
                 value={query}
                 onChangeText={handleChange}
+                onSubmitEditing={handleSubmit}
+                returnKeyType="search"
             />
-            <TouchableOpacity className="pr-5" onPress={() => console.log("clicked")}>
+            <TouchableOpacity className="pr-5" onPress={handleSubmit}>
                 <Image
                     source={images.search}
                     className="size-6"
                     resizeMode="contain"
+                    tintColor="#5D5F6D"
                 />
             </TouchableOpacity>
         </View>

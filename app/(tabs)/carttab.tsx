@@ -36,7 +36,7 @@ const carttab = () => {
             )}
             ListFooterComponent={() => {
                 return (
-                    <View className="flex-col gap-16">
+                    <View className="flex-col gap-8 mt-4">
                         <View className="border rounded-2xl border-[#EDEDED] px-4 py-8 flex-col gap-5 w-[90%] mx-auto">
                             <Text className="h3-bold">Payment Summary</Text>
                             <PaymentInfoStripe  label={`Total items (${getTotalItems()})`} value={`$${getTotalPrice()}`} />
@@ -50,6 +50,7 @@ const carttab = () => {
                 )
             }}
             ListEmptyComponent={() => <Text>Cart is Empty</Text>}
+            contentContainerClassName="pb-32"
         />
     </SafeAreaView>
   )

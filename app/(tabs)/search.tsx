@@ -1,16 +1,15 @@
-import {Text, View, Button, FlatList} from 'react-native'
-import {SafeAreaView} from "react-native-safe-area-context";
-import cn from "clsx";
-import useAppwrite from "@/lib/useAppwrite";
-import {getCategories, getSearchMenus} from "@/lib/appwrite";
-import {useLocalSearchParams} from "expo-router";
-import {useEffect} from "react";
 import Cart from "@/components/Cart";
-import MenuCard from "@/components/MenuCard";
-import {Category, MenuItem} from "@/type";
-import seed from "@/lib/seed";
-import Searchbar from "@/components/Searchbar";
 import Filter from "@/components/Filter";
+import MenuCard from "@/components/MenuCard";
+import Searchbar from "@/components/Searchbar";
+import { getCategories, getSearchMenus } from "@/lib/appwrite";
+import useAppwrite from "@/lib/useAppwrite";
+import { Category, MenuItem } from "@/type";
+import cn from "clsx";
+import { useLocalSearchParams } from "expo-router";
+import { useEffect } from "react";
+import { FlatList, Text, View } from 'react-native';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const search = () => {
     const { category, query } = useLocalSearchParams<{query: string; category: string}>();

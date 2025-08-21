@@ -1,7 +1,10 @@
 import { images, offers } from "@/constants";
+import { getCategory } from "@/lib/appwrite";
+import useAppwrite from "@/lib/useAppwrite";
 import useAuthStore from "@/store/auth.store";
 import cn from 'clsx';
-import { Fragment } from "react";
+import { router, useLocalSearchParams } from "expo-router";
+import { Fragment, useEffect } from "react";
 import { FlatList, Image, Pressable, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Cart from "../../components/Cart";
@@ -9,6 +12,19 @@ import "../global.css";
  
 export default function Index() {
   const isEven = (index: number) => index % 2 === 0;
+  const {category} = useLocalSearchParams<{category: string}>();
+
+  const { data, refetch } = useAppwrite({
+    fn: getCategory,
+    params: { name: ''}
+  });
+
+  useEffect(() => {
+    refetch({
+      name: category
+    });
+    console.log('category id from useEffect', data?.$id)
+  }, [category])
 
   const { user } = useAuthStore();
 
@@ -19,7 +35,7 @@ export default function Index() {
         renderItem={({ item, index }) => {
           return (
             <View>
-              <Pressable className={cn("offer-card", isEven(index) ? "flex-row-reverse" : "flex-row")} style={{ backgroundColor: item.color }} android_ripple={{color: "#ffff22"}}>
+              <Pressable className={cn("offer-card", isEven(index) ? "flex-row-reverse" : "flex-row")} style={{ backgroundColor: item.color }} android_ripple={{color: "#ffff22"}} onPress={() => router.push(`/search?category=${data?.$id}`)}>
                 {
                   ({pressed}) => {
                     return (

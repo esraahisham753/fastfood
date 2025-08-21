@@ -1,4 +1,4 @@
-import {Category, CreateUserParams, GetMenuParams, SignInParams} from "@/type";
+import { CreateUserParams, GetMenuParams, SignInParams } from "@/type";
 import { Account, Avatars, Client, Databases, ID, Query, Storage } from "react-native-appwrite";
 
 export const appwriteConfig = {
@@ -124,6 +124,25 @@ export const getCategories = async ()  => {
         );
 
         return cats.documents;
+    }
+    catch (e)
+    {
+        throw new Error(e as string);
+    }
+}
+
+export const getCategory = async ({ name }:{name: string}) => {
+    const queries: string[]  = [Query.search("name", name)];
+
+    try
+    {
+        const category = await databases.listDocuments(
+            appwriteConfig.databaseID,
+            appwriteConfig.categoryCollectionID,
+            queries
+        );
+
+        return category.documents[0];
     }
     catch (e)
     {

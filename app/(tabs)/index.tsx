@@ -52,9 +52,29 @@ export default function Index() {
                 )}
                 style={{ backgroundColor: item.color }}
                 android_ripple={{ color: "#ffff22" }}
-                onPress={() => {
-                  router.setParams({category: 'pizzas'});
-                  router.push(`/search?category=${data?.$id}`);
+                onPress={async () => {
+                  // Resolve the category document immediately to avoid the
+                  // race between setParams/refetch and navigation.
+                  const title = (item.title || "").toString().toLowerCase();
+                  let name = "";
+                  if (title.includes("pizza")) name = "Pizza";
+                  else if (title.includes("burger")) name = "Burger";
+                  else if (title.includes("burrito")) name = "Burrito";
+
+                  try {
+                    if (name) {
+                      const categoryDoc = await getCategory({ name: 'burgers' });
+                      if (categoryDoc && categoryDoc.$id) {
+                        console.log(categoryDoc.$id);
+                        router.push(`/search?category=${categoryDoc.$id}`);
+                        return;
+                      }
+                    }
+                  } catch (e) {
+                    // fallback to generic search route if lookup fails
+                  }
+
+                  router.push(`/search`);
                 }}
               >
                 {({ pressed }) => {

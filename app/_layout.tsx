@@ -29,7 +29,7 @@ export default Sentry.wrap(function RootLayout() {
     "Quicksand-Regular": require("../assets/fonts/Quicksand-Regular.ttf"),
     "Quicksand-SemiBold": require("../assets/fonts/Quicksand-SemiBold.ttf"),
   })
-  const { isLoading, fetchAuthenticatedUser } = useAuthStore();
+  const { isLoading, fetchAuthenticatedUser, user } = useAuthStore();
 
   useEffect(() => {
     if (error) throw error;
@@ -43,6 +43,13 @@ export default Sentry.wrap(function RootLayout() {
   useEffect(() => {
     fetchAuthenticatedUser();
   }, []);
+
+  useEffect(() => {
+    if (!user)
+    {
+      
+    }
+  }, [user])
 
   if (!fontsLoaded || isLoading) return null;
 

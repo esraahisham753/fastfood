@@ -1,10 +1,7 @@
 import { images, offers } from "@/constants";
-import { getCategory } from "@/lib/appwrite";
-import useAppwrite from "@/lib/useAppwrite";
-import useAuthStore from "@/store/auth.store";
 import cn from "clsx";
-import { router, useLocalSearchParams } from "expo-router";
-import { Fragment, useEffect } from "react";
+import { router } from "expo-router";
+import { Fragment } from "react";
 import {
   FlatList,
   Image,
@@ -19,9 +16,9 @@ import "../global.css";
 
 export default function Index() {
   const isEven = (index: number) => index % 2 === 0;
-  const { category } = useLocalSearchParams<{ category: string }>();
+  /*const { category } = useLocalSearchParams<{ category: string }>();*/
 
-  const { data, refetch } = useAppwrite({
+  /*const { data, refetch } = useAppwrite({
     fn: getCategory,
     params: { name: "" },
   });
@@ -34,9 +31,8 @@ export default function Index() {
     }
 
     // console.log("category id from useEffect", data?.$id);
-  }, [category]);
+  }, [category]);*/
 
-  const { user } = useAuthStore();
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -52,29 +48,12 @@ export default function Index() {
                 )}
                 style={{ backgroundColor: item.color }}
                 android_ripple={{ color: "#ffff22" }}
-                onPress={async () => {
-                  // Resolve the category document immediately to avoid the
-                  // race between setParams/refetch and navigation.
-                  const title = (item.title || "").toString().toLowerCase();
-                  let name = "";
-                  if (title.includes("pizza")) name = "Pizza";
-                  else if (title.includes("burger")) name = "Burger";
-                  else if (title.includes("burrito")) name = "Burrito";
-
-                  try {
-                    if (name) {
-                      const categoryDoc = await getCategory({ name: 'burgers' });
-                      if (categoryDoc && categoryDoc.$id) {
-                        console.log(categoryDoc.$id);
-                        router.push(`/search?category=${categoryDoc.$id}`);
-                        return;
-                      }
-                    }
-                  } catch (e) {
-                    // fallback to generic search route if lookup fails
-                  }
-
-                  router.push(`/search`);
+                onPress={() => {
+                  // Hardcode the burger category ID for testing
+                  const categoryID = item.catid;
+                  // console.log("Navigating with category ID:", categoryID);
+                  router.setParams({ category: categoryID });
+                  router.push(`/search?category=${categoryID}`);
                 }}
               >
                 {({ pressed }) => {

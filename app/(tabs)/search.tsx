@@ -34,12 +34,12 @@ const search = () => {
         }); 
     }, [query, category, categories]);
 
-    if (!categories || categories.length === 0)
+    /* if (!categories || categories.length === 0)
     {
         return (
             <Text className="text-3xl">Loading...</Text>
         );
-    }
+    }*/
 
   return (
     <SafeAreaView className="bg-[#FAFAFA] h-full">

@@ -14,6 +14,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 const search = () => {
     const { category, query } = useLocalSearchParams<{query: string; category: string}>();
 
+
     const { data: menus, refetch: menusRefetch, loading: menusLoading } = useAppwrite({
         fn: getSearchMenus,
         params: {
@@ -30,8 +31,15 @@ const search = () => {
     useEffect(() => {
         menusRefetch({
          query, category, limit: 6
-        });
-    }, [query, category]);
+        }); 
+    }, [query, category, categories]);
+
+    if (!categories || categories.length === 0)
+    {
+        return (
+            <Text className="text-3xl">Loading...</Text>
+        );
+    }
 
   return (
     <SafeAreaView className="bg-[#FAFAFA] h-full">
@@ -62,7 +70,7 @@ const search = () => {
                           <Cart />
                       </View>
                       <Searchbar />
-                      <Filter categories={(categories as unknown as Category[]) || []}/>
+                      <Filter categories={(categories as unknown as Category[]) || []} />
                   </View>
               )
           }}

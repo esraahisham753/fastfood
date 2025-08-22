@@ -1,18 +1,21 @@
 import { Category } from "@/type";
 import cn from 'clsx';
 import { router, useLocalSearchParams } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FlatList, Text, TouchableOpacity } from "react-native";
 
-const Filter = ({ categories }: {categories: Category[]}) => {
-    const { category } = useLocalSearchParams();
-    console.log('Category from filter: ', category);
-    const [active, setActive] = useState( category || 'all');
-    console.log('active', active);
+const Filter = ({ categories }: { categories: Category[] }) => {
+    const { category } = useLocalSearchParams<{category: string}>();
+    const [active, setActive] = useState<string>(category || 'all');
+
+    useEffect(() => {
+        setActive(category || 'all');
+    }, [category])
+
     const filterData: (Category | {$id: string; name: string})[] = categories ?
         [{$id: 'all', name:'All'}, ...categories] :
         [{$id: 'all', name:'All'}];
-
+    
     const handlePress = (itemId: string) => {
         setActive( itemId );
 
@@ -29,8 +32,6 @@ const Filter = ({ categories }: {categories: Category[]}) => {
             showsHorizontalScrollIndicator={false}
             contentContainerClassName="px-2 gap-2 mb-4 mt-8"
             renderItem={({ item }) => {
-                console.log("active", active);
-                console.log("item id", item.$id);
                 return (
                     <TouchableOpacity
                         className={cn('filter', active === item.$id ? 'bg-amber-500' : 'bg-white')}

@@ -1,8 +1,8 @@
 import useAuthStore from '@/store/auth.store';
 import * as Sentry from '@sentry/react-native';
 import { useFonts } from 'expo-font';
-import { SplashScreen, Stack } from "expo-router";
-import { useEffect } from "react";
+import { router, Slot, SplashScreen, Stack, useRootNavigationState, useSegments } from "expo-router";
+import { useEffect, useState } from "react";
 import './global.css';
 
 Sentry.init({
@@ -30,6 +30,9 @@ export default Sentry.wrap(function RootLayout() {
     "Quicksand-SemiBold": require("../assets/fonts/Quicksand-SemiBold.ttf"),
   })
   const { isLoading, fetchAuthenticatedUser, user } = useAuthStore();
+  const navigationState = useRootNavigationState();
+  const segments = useSegments();
+  const [mounted, setMounted] = useState<boolean>(false);
 
   useEffect(() => {
     if (error) throw error;
@@ -42,16 +45,25 @@ export default Sentry.wrap(function RootLayout() {
 
   useEffect(() => {
     fetchAuthenticatedUser();
+    setMounted(true);
   }, []);
 
   useEffect(() => {
-    if (!user)
-    {
-      
-    }
-  }, [user])
+    if (!mounted || !navigationState?.key) return;
 
-  if (!fontsLoaded || isLoading) return null;
+    const isAuthGroup = segments[0] === '(auth)';
+
+    if (!user && !isAuthGroup)
+    {
+      router.replace("/(auth)/signin");
+    }
+    else if (user && isAuthGroup) 
+    {
+      router.replace("/(tabs)");
+    }
+  }, [user, segments, navigationState?.key, mounted]);
+
+  if (!fontsLoaded || isLoading) return <Slot />;
 
   return <Stack screenOptions={{headerShown: false}}/>;
 });

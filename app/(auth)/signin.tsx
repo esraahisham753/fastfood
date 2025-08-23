@@ -1,6 +1,7 @@
 import CustomButtom from "@/components/CustomButtom";
 import CustomInput from "@/components/CustomInput";
 import { signIn } from "@/lib/appwrite";
+import useAuthStore from "@/store/auth.store";
 import * as Sentry from "@sentry/react-native";
 import { Link, router } from "expo-router";
 import { useState } from "react";
@@ -10,6 +11,7 @@ const signin = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [form, setForm] = useState({ email: "", password: "" });
   const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
+  const { setUser } = useAuthStore();
 
   const submit = async () => {
     const { email, password } = form;
@@ -20,8 +22,13 @@ const signin = () => {
       return Alert.alert("Error", "Please enter valid email and password");
 
     try {
-      await signIn({ email, password });
-      setShowSuccessModal(true);
+      const session = await signIn({ email, password });
+      
+      if (session)
+      {
+        setUser(session);
+        setShowSuccessModal(true);
+      }
     } catch (error: any) {
       Alert.alert("Error", error.message);
       Sentry.captureEvent(error);

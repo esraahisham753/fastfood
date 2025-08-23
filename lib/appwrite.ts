@@ -59,6 +59,8 @@ export const signIn = async ({email, password}:SignInParams) => {
     try
     {
         const userSession = await account.createEmailPasswordSession(email, password);
+
+        return userSession;
     }
     catch (e)
     {
@@ -84,7 +86,7 @@ export const getCurrentUser = async () => {
     {
         const currentAccount = await account.get();
 
-        if (!currentAccount) throw new Error('Cannot find an account');
+        if (!currentAccount) return null;
 
         const documents = await databases.listDocuments(
             appwriteConfig.databaseID,
@@ -94,14 +96,15 @@ export const getCurrentUser = async () => {
             ]
         );
 
-        if (!documents) throw new Error(`Cannot find user with this id: ${currentAccount.$id}`);
+        if (!documents) return null;
 
         return documents.documents[0];
     }
     catch (e)
     {
-        console.log(e as string);
-        throw new Error(e as string);
+        const msg = (e as any)?.message || String(e);
+
+        if (msg.includes('missing'))
     }
 
 }

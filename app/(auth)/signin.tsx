@@ -1,17 +1,18 @@
 import CustomButtom from "@/components/CustomButtom";
 import CustomInput from "@/components/CustomInput";
+import { images } from "@/constants";
 import { signIn } from "@/lib/appwrite";
 import useAuthStore from "@/store/auth.store";
 import * as Sentry from "@sentry/react-native";
 import { Link, router } from "expo-router";
 import { useState } from "react";
-import { Alert, Button, Modal, Text, View } from "react-native";
+import { Alert, Image, Modal, Text, View } from "react-native";
 
 const signin = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [form, setForm] = useState({ email: "", password: "" });
   const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
-  const { setUser } = useAuthStore();
+  const { fetchAuthenticatedUser } = useAuthStore();
 
   const submit = async () => {
     const { email, password } = form;
@@ -23,10 +24,8 @@ const signin = () => {
 
     try {
       const session = await signIn({ email, password });
-      
-      if (session)
-      {
-        setUser(session);
+      if (session) {
+        await fetchAuthenticatedUser();
         setShowSuccessModal(true);
       }
     } catch (error: any) {
@@ -77,9 +76,13 @@ const signin = () => {
         transparent={true}
         visible={showSuccessModal}
       >
-        <View>
-          <Text>Login Successful</Text>
-          <Button title="Go to the homepage" onPress={() => router.replace('/')}/>
+        <View className="flex-1 w-full rounded-t-3xl items-center justify-center bg-white absolute bottom-0">
+          <View className="bg-white rounded-xl p-6 w-full items-center justify-center">
+            <Image source={images.success} className="size-20" resizeMode="contain"/>
+            <Text className="h3-bold mb-4">Login Successful</Text>
+            <Text>You’re all set to continue where you left off.</Text>
+            <CustomButtom title="Go to the homepage" onPress={() => router.replace('/(tabs)')} />
+          </View>
         </View>
       </Modal>
     </>

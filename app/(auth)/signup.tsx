@@ -23,8 +23,8 @@ const signin = () => {
         name,
         password
       });
-      
-      router.replace('/');
+      // After sign up, require explicit login per requested flow
+      router.replace('/(auth)/signin');
     }
     catch (error: any)
     {

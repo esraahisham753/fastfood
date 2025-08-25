@@ -1,8 +1,8 @@
 import useAuthStore from '@/store/auth.store';
 import * as Sentry from '@sentry/react-native';
 import { useFonts } from 'expo-font';
-import { router, Slot, SplashScreen, Stack, useRootNavigationState, useSegments } from "expo-router";
-import { useEffect, useState } from "react";
+import { router, SplashScreen, Stack, useRootNavigationState, useSegments } from "expo-router";
+import { useEffect, useRef, useState } from "react";
 import './global.css';
 
 Sentry.init({
@@ -33,6 +33,7 @@ export default Sentry.wrap(function RootLayout() {
   const navigationState = useRootNavigationState();
   const segments = useSegments();
   const [mounted, setMounted] = useState<boolean>(false);
+  const hasRoutedInitially = useRef<boolean>(false);
 
   useEffect(() => {
     if (error) throw error;
@@ -48,22 +49,21 @@ export default Sentry.wrap(function RootLayout() {
     setMounted(true);
   }, []);
 
+  // Perform initial routing once after the first auth check completes.
   useEffect(() => {
-    if (!mounted || !navigationState?.key) return;
+    if (!mounted || !navigationState?.key || isLoading || hasRoutedInitially.current) return;
+    if (!segments || !segments[0]) return; // wait until segments are ready
 
     const isAuthGroup = segments[0] === '(auth)';
 
-    if (!user && !isAuthGroup)
-    {
-      router.replace("/(auth)/signin");
+    if (!user && !isAuthGroup) {
+      router.replace('/(auth)/signin');
+    } else if (user && isAuthGroup) {
+      router.replace('/(tabs)');
     }
-    else if (user && isAuthGroup) 
-    {
-      router.replace("/(tabs)");
-    }
-  }, [user, segments, navigationState?.key, mounted]);
 
-  if (!fontsLoaded || isLoading) return <Slot />;
+    hasRoutedInitially.current = true;
+  }, [isLoading, mounted, navigationState?.key, segments, user]);
 
   return <Stack screenOptions={{headerShown: false}}/>;
 });

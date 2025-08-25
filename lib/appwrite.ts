@@ -58,8 +58,15 @@ export const createUser = async ({name, email, password}: CreateUserParams) => {
 export const signIn = async ({email, password}:SignInParams) => {
     try
     {
-        const userSession = await account.createEmailPasswordSession(email, password);
+        // If a session is already active, reuse it instead of creating a new one
+        try {
+            const active = await account.getSession('current');
+            if (active) return active;
+        } catch (_) {
+            // No active session, proceed to create a new one
+        }
 
+        const userSession = await account.createEmailPasswordSession(email, password);
         return userSession;
     }
     catch (e)
@@ -98,6 +105,16 @@ export const getCurrentUser = async () => {
 
         if (!documents) return null;
 
+        // If no profile document exists, fall back to account info so we still treat the user as authenticated
+        if (documents.documents.length === 0) {
+            return {
+                $id: currentAccount.$id,
+                name: currentAccount.name,
+                email: currentAccount.email,
+                avatar: avatars.getInitialsURL(currentAccount.name),
+            } as any;
+        }
+
         return documents.documents[0];
     }
     catch (e)
@@ -105,6 +122,9 @@ export const getCurrentUser = async () => {
         const msg = (e as any)?.message || String(e);
 
         if (msg.includes('missing'))
+        {
+            return null;
+        }
     }
 
 }

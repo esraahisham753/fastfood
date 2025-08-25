@@ -88,6 +88,15 @@ export const signOut = async () => {
     }
 }
 
+export const checkActiveSession = async () => {
+    try {
+        const session = await account.getSession('current');
+        return session ? true : false;
+    } catch (e) {
+        return false;
+    }
+}
+
 export const getCurrentUser = async () => {
     try
     {
@@ -121,12 +130,15 @@ export const getCurrentUser = async () => {
     {
         const msg = (e as any)?.message || String(e);
 
-        if (msg.includes('missing'))
-        {
+        // If session is missing or invalid, return null (user needs to login)
+        if (msg.includes('missing') || msg.includes('401') || msg.includes('unauthorized')) {
             return null;
         }
+        
+        // For other errors, log them but still return null to avoid breaking the app
+        console.log('Error getting current user:', msg);
+        return null;
     }
-
 }
 
 export const getSearchMenus = async ({category, query}:GetMenuParams) => {

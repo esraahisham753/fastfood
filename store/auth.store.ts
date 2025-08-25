@@ -1,4 +1,4 @@
-import { getCurrentUser } from '@/lib/appwrite'
+import { checkActiveSession, getCurrentUser } from '@/lib/appwrite'
 import { User } from '@/type'
 import { create } from 'zustand'
 
@@ -26,10 +26,21 @@ const useAuthStore = create<UserAuth>((set) => ({
 
         try
         {
+            // First check if there's an active session
+            const hasSession = await checkActiveSession();
+            
+            if (!hasSession) {
+                set({ isAuthenticated: false, user: null });
+                return;
+            }
+
             const user = await getCurrentUser();
             
-            if (user) set({ user: {name: user.name, email: user.email, avatar: user.avatar, ...user}, isAuthenticated: true });
-            else set({ isAuthenticated: false, user: null });
+            if (user) {
+                set({ user: {name: user.name, email: user.email, avatar: user.avatar, ...user}, isAuthenticated: true });
+            } else {
+                set({ isAuthenticated: false, user: null });
+            }
         }
         catch(e)
         {

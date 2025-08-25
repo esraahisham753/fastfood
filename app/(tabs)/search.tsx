@@ -1,6 +1,7 @@
 import Cart from "@/components/Cart";
 import Filter from "@/components/Filter";
 import MenuCard from "@/components/MenuCard";
+import NoItems from "@/components/NoItems";
 import Searchbar from "@/components/Searchbar";
 import { getCategories, getSearchMenus } from "@/lib/appwrite";
 import useAppwrite from "@/lib/useAppwrite";
@@ -70,13 +71,13 @@ const search = () => {
                           <Cart />
                       </View>
                       <Searchbar />
-                      <Filter categories={(categories as unknown as Category[]) || []} />
+                      { menus && menus.length > 0 && <Filter categories={(categories as unknown as Category[]) || []} /> }
                   </View>
               )
           }}
           ListEmptyComponent={() => {
               return (
-                  !menusLoading ? <Text>No items to return</Text> : <Text>Loading...</Text>
+                  !menusLoading ? <NoItems /> : <Text>Loading...</Text>
               )
           }}
 

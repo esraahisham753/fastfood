@@ -71,17 +71,26 @@ const signin = () => {
           </Link>
         </View>
       </View>
+      {/* Overlay when modal is shown */}
+      {showSuccessModal && (
+        <View className="absolute inset-0 bg-black/50 z-10" />
+      )}
       <Modal
-        animationType="fade"
+        animationType="slide"
         transparent={true}
         visible={showSuccessModal}
       >
-        <View className="flex-1 w-full rounded-t-3xl items-center justify-center bg-white absolute bottom-0">
-          <View className="bg-white rounded-xl p-6 w-full items-center justify-center">
-            <Image source={images.success} className="size-20" resizeMode="contain"/>
-            <Text className="h3-bold mb-4">Login Successful</Text>
-            <Text>You’re all set to continue where you left off.</Text>
-            <CustomButtom title="Go to the homepage" onPress={() => router.replace('/(tabs)')} />
+        <View className="flex-1 justify-end bg-transparent">
+          <View className="bg-white rounded-t-3xl w-full h-[480px] flex flex-col px-6">
+            <View className="border-b-2 border-gray-200 w-[25%] self-center mt-4" />
+            <View className="flex-1 flex flex-col gap-4 items-center justify-center">
+              <Image source={images.success} className="size-48" resizeMode="contain"/>
+              <Text className="h3-bold mb-4 mt-4">Login Successful</Text>
+              <Text className="text-center mb-6 text-gray-200">You're all set to continue where you left off.</Text>
+            </View>
+            <View className="pb-6">
+              <CustomButtom title="Go to the homepage" onPress={() => router.replace('/(tabs)')} />
+            </View>
           </View>
         </View>
       </Modal>

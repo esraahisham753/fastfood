@@ -1,9 +1,9 @@
+import { images } from "@/constants";
 import useAuthStore from '@/store/auth.store';
-import {Redirect, Slot, Tabs} from 'expo-router';
-import {TabBarIconProps} from "@/type";
-import {View, Image, Text} from "react-native";
+import { TabBarIconProps } from "@/type";
 import cn from "clsx";
-import {images} from "@/constants";
+import { Redirect, Tabs } from 'expo-router';
+import { Image, Text, View } from "react-native";
 
 const TabBarIcon = ({focused, title, icon}: TabBarIconProps) => (
     <View className="tab-icon">
@@ -68,6 +68,13 @@ export default function TabLayout() {
             options={{
                 tabBarIcon: ({ focused }) => (<TabBarIcon icon={images.person} focused={focused} title="Profile"/>),
                 title: 'Profile'
+            }}
+        />
+        <Tabs.Screen
+            name="menuitem"
+            options={{
+                // Hide this route from the tab bar but keep it navigable
+                href: null
             }}
         />
     </Tabs>

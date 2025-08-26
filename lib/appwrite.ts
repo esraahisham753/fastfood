@@ -196,3 +196,20 @@ export const getCategory = async ({ name }:{name: string}) => {
         throw new Error(e as string);
     }
 }
+
+export const getMenuItem = async ({id}:{id: string}) => {
+    try
+    {
+        const menu = await databases.getDocument(
+            appwriteConfig.databaseID,
+            appwriteConfig.menuCollectionID,
+            id
+        );
+        
+        return menu;
+    }
+    catch (e)
+    {
+        throw new Error(e as string);
+    }
+};

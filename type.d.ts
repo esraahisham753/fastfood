@@ -105,3 +105,9 @@ interface GetMenuParams {
     category: string;
     query: string;
 }
+
+interface Extra {
+    name: string;
+    image: any;
+    price: number
+}

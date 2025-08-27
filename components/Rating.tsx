@@ -33,13 +33,13 @@ const Rating: React.FC<RatingProps> = ({ rating }) => {
           key={index}
           source={images.star}
           className="size-4"
-          tintColor={starType === 'empty' ? '#E5E5E5' : '#FFD700'}
+          tintColor={starType === 'empty' ? '#E5E5E5' : '#FE8C00'}
           style={{
             opacity: starType === 'empty' ? 0.3 : 1
           }}
         />
       ))}
-      <Text className="text-sm font-medium text-gray-600 ml-1">
+      <Text className="text-sm font-medium text-gray-200 ml-1">
         {clampedRating.toFixed(1)}/5
       </Text>
     </View>

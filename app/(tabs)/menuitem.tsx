@@ -78,14 +78,17 @@ const MenuItemScreen = () => {
         <Text className='base-semibold'>Toppings</Text>
         <FlatList
           data={toppings}
-          renderItem={(item) => <ExtraItem extra={item} />}
+          renderItem={({ item }) => <ExtraItem extra={item} />}
           keyExtractor={(item) => item.name}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ paddingHorizontal: 10 }}
-          style= {{ height: 100 }}
+          style= {{ height: 500 }}
+          contentContainerClassName='mb-8'
+          ListFooterComponent={<View style={{ height: 100 }} />}
         />
       </View>
+      <View style={{ height: 500 }} />
     </SafeAreaView>
   )
 }

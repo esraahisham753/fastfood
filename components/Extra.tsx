@@ -1,10 +1,18 @@
 import { Extra } from "@/type";
-import { Text, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 
-const ExtraItem = ({ extra }: {extra: Extra}) => {
+const ExtraItem = ({ extra: {name, price, image} }: {extra: Extra}) => {
     return (
         <View>
-            <Text>{extra.name}</Text>
+            <View>
+                <Image source={image} alt={`${name} topping image`} />
+            </View>
+            <View>
+                <Text>{name}</Text>
+                <TouchableOpacity>
+                    <Text>+</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     )
 }

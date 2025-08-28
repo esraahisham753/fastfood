@@ -102,12 +102,12 @@ export const sides = [
         price: 3.5,
     },
     {
-        name: "Onion Rings",
+        name: "Onion",
         image: onionRings,
         price: 4.0,
     },
     {
-        name: "Mozarella Sticks",
+        name: "Mozarella",
         image: mozarellaSticks,
         price: 5.0,
     },

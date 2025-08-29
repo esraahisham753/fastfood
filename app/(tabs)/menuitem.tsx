@@ -12,6 +12,7 @@ import Rating from '../../components/Rating';
 const MenuItemScreen = () => {
   const { id } = useLocalSearchParams();
   const [item, setItem] = useState<MenuItem | null>(null);
+  const [itemPrice, setItemPrice] = useState<number>(0);
 
   useEffect(() => {
     if (!id) return;
@@ -21,6 +22,8 @@ const MenuItemScreen = () => {
       try {
         const fetchedMenuItem = await getMenuItem({id: id as string});
         setItem(fetchedMenuItem as unknown as MenuItem);
+        // console.log(fetchedMenuItem);
+        setItemPrice((fetchedMenuItem as unknown as MenuItem)?.price);
       } catch (error) {
         console.error("Error fetching menu item:", error);
       }
@@ -86,7 +89,6 @@ const MenuItemScreen = () => {
             contentContainerStyle={{ paddingHorizontal: 10, gap: 20 }}
             style={{ height: 150 }}
             contentContainerClassName='my-3'
-            ListFooterComponent={<View style={{ height: 100 }} />}
           />
         </View>
         <View className='pl-6 mt-6'>
@@ -100,22 +102,22 @@ const MenuItemScreen = () => {
             contentContainerStyle={{ paddingHorizontal: 10, gap: 20 }}
             style={{ height: 150 }}
             contentContainerClassName='my-3'
-            ListFooterComponent={() => {
-              return (
-                <View>
-                  <View>
-                    <TouchableOpacity>
-                      <Image source={images.minus}/>
-                    </TouchableOpacity>
-                    <Text>2</Text>
-                    <TouchableOpacity>
-                      <Image source={images.plus}/>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              )
-            }}
           />
+        </View>
+        <View className='flex flex-row justify-between items-center bg-white w-[90%] mx-auto rounded-2xl shadow-lg mt-10'>
+          <View>
+            <TouchableOpacity className='bg-gray-100 p-2 rounded-full'>
+              <Image source={images.minus} className='size-5' resizeMode='contain'/>
+            </TouchableOpacity>
+            <Text className='base-semibold text-lg'>2</Text>
+            <TouchableOpacity className='bg-gray-100 p-2 rounded-full'>
+              <Image source={images.plus} className='size-5' resizeMode='contain'/>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity>
+            <Image source={images.bag} className='size-3' resizeMode='contain'/>
+            <Text>Add to cart (${itemPrice})</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>

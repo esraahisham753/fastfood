@@ -3,7 +3,19 @@ import { Image, Text, TouchableOpacity, View } from "react-native";
 
 const ExtraItem = ({ extra: {name, price, image} }: {extra: Extra}) => {
     return (
-        <View className="bg-[#3C2F2F] rounded-2xl w-[110px]">
+        <View 
+            className="bg-[#3C2F2F] rounded-2xl w-[110px]"
+            style={{
+                shadowColor: '#000',
+                shadowOffset: {
+                    width: 0,
+                    height: 2,
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 3.84,
+                elevation: 5,
+            }}
+        >
             <View className="h-[80px] rounded-t-2xl bg-white rounded-b-[25px] flex items-center justify-center">
                 <Image source={image} alt={`${name} topping image`} className="size-20"/>
             </View>

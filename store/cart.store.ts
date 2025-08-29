@@ -16,7 +16,7 @@ function areCustomizationsEqual(
 export const useCartStore = create<CartStore>((set, get) => ({
     items: [],
 
-    addItem: (item) => {
+    addItem: (item, quantity=1) => {
         const customizations = item.customizations ?? [];
 
         const existing = get().items.find(
@@ -36,7 +36,7 @@ export const useCartStore = create<CartStore>((set, get) => ({
             });
         } else {
             set({
-                items: [...get().items, { ...item, quantity: 1, customizations }],
+                items: [...get().items, { ...item, quantity: quantity, customizations }],
             });
         }
     },

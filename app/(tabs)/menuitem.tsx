@@ -2,7 +2,7 @@ import CustomHeader from '@/components/CustomHeader';
 import ExtraItem from '@/components/Extra';
 import { images, sides, toppings } from '@/constants';
 import { getMenuItem } from '@/lib/appwrite';
-import { MenuItem } from '@/type';
+import { CartCustomization, CartItemType, Extra, MenuItem } from '@/type';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { FlatList, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
@@ -13,6 +13,8 @@ const MenuItemScreen = () => {
   const { id } = useLocalSearchParams();
   const [item, setItem] = useState<MenuItem | null>(null);
   const [itemPrice, setItemPrice] = useState<number>(0);
+  const [customizations, setCustomizations] = useState<CartCustomization[]>([]);
+  const [cartItem, setCartItem] = useState<CartItemType | null>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -24,12 +26,63 @@ const MenuItemScreen = () => {
         setItem(fetchedMenuItem as unknown as MenuItem);
         // console.log(fetchedMenuItem);
         setItemPrice((fetchedMenuItem as unknown as MenuItem)?.price);
+        setCartItem({
+          id: fetchedMenuItem.$id,
+          name: fetchedMenuItem.name,
+          price: fetchedMenuItem.price,
+          image_url: fetchedMenuItem.image_url,
+          quantity: 1,
+          customizations: []
+        });
       } catch (error) {
         console.error("Error fetching menu item:", error);
       }
     }
     fetchMenuItem();
   }, [id])
+
+  const handleIncrement = () => {
+    setCartItem((prev) => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        quantity: prev.quantity + 1
+      }
+    });
+  }
+
+  const handleDecrement = () => {
+    if (cartItem?.quantity == 1) return;
+
+    setCartItem((prev) => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        quantity: prev.quantity - 1
+      }
+    });
+  }
+
+  const hasCustomization = (extra: Extra): boolean => {
+    return customizations.find(c => c.name === extra.name) !== null; 
+  }
+
+  const handleAddCustomiztion = (extra: Extra, type: string) => {
+    if (hasCustomization(extra)) return;
+
+    const newCusomization = {
+      id: extra.name,
+      name: extra.name,
+      price: extra.price,
+      type
+    };
+
+    setCustomizations((prev) => {
+      return [...prev, newCusomization];
+    });
+  };
+
+  
   
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -82,7 +135,7 @@ const MenuItemScreen = () => {
           <Text className='base-semibold'>Toppings</Text>
           <FlatList
             data={toppings}
-            renderItem={({ item }) => <ExtraItem extra={item} />}
+            renderItem={({ item }) => <ExtraItem extra={item} type='topping' addCustomization={handleAddCustomiztion}/>}
             keyExtractor={(item) => item.name}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
@@ -95,7 +148,7 @@ const MenuItemScreen = () => {
           <Text className='base-semibold'>Side options</Text>
           <FlatList
             data={sides}
-            renderItem={({ item }) => <ExtraItem extra={item} />}
+            renderItem={({ item }) => <ExtraItem extra={item} type='side' addCustomization={handleAddCustomiztion}/>}
             keyExtractor={(item) => item.name}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
@@ -104,19 +157,21 @@ const MenuItemScreen = () => {
             contentContainerClassName='my-3'
           />
         </View>
-        <View className='flex flex-row justify-between items-center bg-white w-[90%] mx-auto rounded-2xl shadow-lg mt-10'>
-          <View>
-            <TouchableOpacity className='bg-gray-100 p-2 rounded-full'>
+        <View className='flex flex-row justify-between items-center bg-white w-[85%] mx-auto rounded-3xl shadow-lg mt-10 p-4'>
+          <View className='flex flex-row justify-between gap-3'>
+            <TouchableOpacity onPress={handleDecrement} className='bg-primary/5 p-2'>
               <Image source={images.minus} className='size-5' resizeMode='contain'/>
             </TouchableOpacity>
-            <Text className='base-semibold text-lg'>2</Text>
-            <TouchableOpacity className='bg-gray-100 p-2 rounded-full'>
+            <Text className='base-semibold'>{cartItem?.quantity || 1}</Text>
+            <TouchableOpacity onPress={handleIncrement} className='bg-primary/5 p-2'>
               <Image source={images.plus} className='size-5' resizeMode='contain'/>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity>
-            <Image source={images.bag} className='size-3' resizeMode='contain'/>
-            <Text>Add to cart (${itemPrice})</Text>
+          <TouchableOpacity className='bg-primary p-4 rounded-3xl'>
+            <View className='flex flex-row gap-2 items-center'>
+              <Image source={images.bag} className='size-4' resizeMode='contain'/>
+              <Text className='paragraph-medium text-white'>Add to cart (${itemPrice})</Text>
+            </View>
           </TouchableOpacity>
         </View>
       </ScrollView>

@@ -19,7 +19,7 @@ const MenuCard = ({item: {$id, image_url, name, price}}: {item: MenuItem}) => {
                 <Text numberOfLines={1} className="base-regular text-center font-bold">{name}</Text>
                 <Text className="paragraph-semibold text-gray-200">From ${price}</Text>
             </View>
-            <TouchableOpacity onPress={() => { addItem({id: $id, name, price, image_url}) }}>
+            <TouchableOpacity onPress={() => { addItem({id: $id, name, price, image_url, quantity: 1}) }}>
                 <View className="flex-row gap-2 justify-center items-center">
                     <Image source={images.plus} className="size-5"/>
                     <Text className="text-primary paragraph-bold">Add to Cart</Text>

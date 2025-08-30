@@ -1,15 +1,31 @@
 import { Extra } from "@/type";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 
-const ExtraItem = ({ extra: {name, price, image}, type, addCustomization }: {extra: Extra, type: string, addCustomization: (extra: Extra, type: string) => void}) => {
-    const handleAddCustomization = () => {
+const ExtraItem = ({ 
+  extra: {name, price, image}, 
+  type, 
+  addCustomization,
+  removeCustomization,
+  isSelected = false 
+}: {
+  extra: Extra, 
+  type: string, 
+  addCustomization: (extra: Extra, type: string) => void,
+  removeCustomization?: (extra: Extra) => void,
+  isSelected?: boolean
+}) => {
+    const handlePress = () => {
         const myExtra = {name, price, image};
-        addCustomization(myExtra, type);
+        if (isSelected && removeCustomization) {
+            removeCustomization(myExtra);
+        } else {
+            addCustomization(myExtra, type);
+        }
     }
     
     return (
         <View 
-            className="bg-[#3C2F2F] rounded-2xl w-[110px]"
+            className={`rounded-2xl w-[110px] ${isSelected ? 'bg-[#E4004B]' : 'bg-[#3C2F2F]'}`}
             style={{
                 shadowColor: '#000',
                 shadowOffset: {
@@ -26,9 +42,11 @@ const ExtraItem = ({ extra: {name, price, image}, type, addCustomization }: {ext
             </View>
             <View className="flex flex-row justify-between p-2 items-center">
                 <Text className="paragraph-medium text-white line-clamp-1">{name}</Text>
-                <TouchableOpacity>
-                    <View className="bg-[#E4004B] rounded-full w-6 h-6 flex justify-center items-center">
-                        <Text className="text-white font-bold text-lg">+</Text>
+                <TouchableOpacity onPress={handlePress}>
+                    <View className={`rounded-full w-6 h-6 flex justify-center items-center ${isSelected ? 'bg-white' : 'bg-[#E4004B]'}`}>
+                        <Text className={`font-bold text-lg ${isSelected ? 'text-[#E4004B]' : 'text-white'}`}>
+                            {isSelected ? '✓' : '+'}
+                        </Text>
                     </View>
                 </TouchableOpacity>
             </View>

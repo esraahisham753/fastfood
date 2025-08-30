@@ -2,6 +2,7 @@ import CustomHeader from '@/components/CustomHeader';
 import ExtraItem from '@/components/Extra';
 import { images, sides, toppings } from '@/constants';
 import { getMenuItem } from '@/lib/appwrite';
+import { useCartStore } from '@/store/cart.store';
 import { CartCustomization, CartItemType, Extra, MenuItem } from '@/type';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
@@ -15,6 +16,7 @@ const MenuItemScreen = () => {
   const [itemPrice, setItemPrice] = useState<number>(0);
   const [customizations, setCustomizations] = useState<CartCustomization[]>([]);
   const [cartItem, setCartItem] = useState<CartItemType | null>(null);
+  const { addItem } = useCartStore();
 
   useEffect(() => {
     if (!id) return;
@@ -81,6 +83,15 @@ const MenuItemScreen = () => {
       return [...prev, newCusomization];
     });
   };
+
+  const handleAddToCart = () => {
+    if (!cartItem) return;
+
+    const itemToAdd = cartItem;
+    itemToAdd.customizations = customizations;
+
+    addItem(itemToAdd);
+  }
 
   
   

@@ -1,4 +1,6 @@
+import CustomButtom from '@/components/CustomButtom'
 import CustomHeader from '@/components/CustomHeader'
+import ProfileField from '@/components/ProfileField'
 import { images } from '@/constants'
 import { signOut } from '@/lib/appwrite'
 import useAuthStore from '@/store/auth.store'
@@ -10,7 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 const profile = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { setIsAuthenticated, setUser } = useAuthStore();
+  const { setIsAuthenticated, setUser, user } = useAuthStore();
 
   const handleLogout = async () => {
     setIsLoading(true);
@@ -35,11 +37,21 @@ const profile = () => {
     <SafeAreaView>
       <CustomHeader title='Profile' />
       <View className='flex-center flex-row'>
-        <Image source={images.avatar} className='profile-avatar' />
-        <TouchableOpacity className='profile-edit'>
-          <Image source={images.pencil}  className='size-5' />
-        </TouchableOpacity>
+        <View className='profile-avatar'>
+          <Image source={images.avatar} className='size-28'/>
+          <TouchableOpacity className='profile-edit'>
+            <Image source={images.pencil}  className='size-5' />
+          </TouchableOpacity>
+        </View>
       </View>
+      <View className='mt-12 pl-5 flex-col gap-5'>
+        <ProfileField label='FullName' value={user?.name || ''} icon={images.user} />
+        <ProfileField label='Email' value={user?.email || ''} icon={images.envelope} />
+        <ProfileField label='Phone' value={user?.phone || ''} icon={images.phone} />
+        <ProfileField label='Address 1 - (Home)' value={user?.address_home || ''} icon={images.location} />
+        <ProfileField label='Address 2 - (Work)' value={user?.address_work || ''} icon={images.location} />
+      </View>
+      <CustomButtom title='Edit Profile' onPress={handleLogout} />
     </SafeAreaView>
   )
 }

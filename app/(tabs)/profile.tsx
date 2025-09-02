@@ -1,8 +1,10 @@
+import CustomHeader from '@/components/CustomHeader'
+import { images } from '@/constants'
 import { signOut } from '@/lib/appwrite'
 import useAuthStore from '@/store/auth.store'
 import { router } from 'expo-router'
 import { useState } from 'react'
-import { Alert, Button, Text } from 'react-native'
+import { Alert, Image, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 const profile = () => {
@@ -31,8 +33,13 @@ const profile = () => {
   }
   return (
     <SafeAreaView>
-      <Text>profile</Text>
-      <Button title={isLoading ? 'Logging out...' : 'Logout'} onPress={handleLogout} disabled={isLoading}/>
+      <CustomHeader title='Profile' />
+      <View className='flex-center flex-row'>
+        <Image source={images.avatar} className='profile-avatar' />
+        <TouchableOpacity className='profile-edit'>
+          <Image source={images.pencil}  className='size-5' />
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   )
 }

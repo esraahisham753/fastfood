@@ -34,7 +34,7 @@ const profile = () => {
     }
   }
   return (
-    <SafeAreaView>
+    <SafeAreaView className='pb-16'>
       <CustomHeader title='Profile' />
       <View className='flex-center flex-row'>
         <View className='profile-avatar'>
@@ -44,14 +44,15 @@ const profile = () => {
           </TouchableOpacity>
         </View>
       </View>
-      <View className='mt-12 pl-5 flex-col gap-5'>
+      <View className='mt-12 pl-5 flex-col gap-3'>
         <ProfileField label='FullName' value={user?.name || ''} icon={images.user} />
         <ProfileField label='Email' value={user?.email || ''} icon={images.envelope} />
         <ProfileField label='Phone' value={user?.phone || ''} icon={images.phone} />
         <ProfileField label='Address 1 - (Home)' value={user?.address_home || ''} icon={images.location} />
         <ProfileField label='Address 2 - (Work)' value={user?.address_work || ''} icon={images.location} />
       </View>
-      <CustomButtom title='Edit Profile' onPress={handleLogout} />
+      <CustomButtom title='Edit Profile' style='mt-10  mb-5 w-[90%] mx-auto bg-primary/5 border border-[#FE8C00]' textStyle='text-[#FE8C00]' />
+      <CustomButtom title='Logout' style='w-[90%] mb-24 mx-auto bg-error/5 border border-[#F14141]' textStyle='text-[#F14141]' leftIcon={<Image source={images.logout} className='size-5' />} onPress={handleLogout} />
     </SafeAreaView>
   )
 }
